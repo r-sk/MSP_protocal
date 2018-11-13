@@ -1,6 +1,7 @@
 #include <Stream.h>
 
-#define set_rc_value 200
+#define SET_RAW_RC      200
+#define MSP_ATTITUDE    108
 
 typedef struct
 {
@@ -16,6 +17,15 @@ typedef struct
   
 }rc_struct;
 
+typedef struct
+{
+  float yaw;
+  float pitch;
+  float roll;
+  
+}orientation;
+
+
 class MSP
 {
   private:
@@ -28,5 +38,8 @@ class MSP
 
     void command(uint8_t msgID, void * payload, uint8_t size);
 
-    void set_rc_values(rc_struct rc);
+    void set_raw_rc(rc_struct rc);
+
+    orientation get_orientation();
+    
 };

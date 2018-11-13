@@ -28,7 +28,7 @@ void MSP::command(uint8_t msgID, void * payload, uint8_t size)
   _stream->write(checksum);
 }
 
-void MSP::set_rc_values(rc_struct rc)
+void MSP::set_raw_rc(rc_struct rc)
 {
   data[0] = (rc.roll & 0x00FF);
   data[1] = (rc.roll & 0xFF00) >> 8;
@@ -54,6 +54,18 @@ void MSP::set_rc_values(rc_struct rc)
   data[14] = (rc.aux4 & 0x00FF);
   data[15] = (rc.aux4 & 0xFF00) >> 8;
 
-  command(set_rc_value, data, sizeof(rc));
+  command(SET_RAW_RC, data, sizeof(rc));
+  
+}
+
+orientation MSP::get_orientation()
+{
+  orientation o;
+
+  o.yaw = 0;
+  o.pitch = 1;
+  o.roll = 2;
+
+  return o;
   
 }

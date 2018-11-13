@@ -4,10 +4,14 @@
 SoftwareSerial naze_serial(D2, D3); // RX TX
 
 rc_struct rc;
+orientation ori;
+
 MSP naze;
 
 void setup()
 {
+  Serial.begin(9600);
+  
   rc.roll = 1100;
   rc.pitch = 1200;
   rc.yaw = 1300;
@@ -25,8 +29,12 @@ void setup()
 
 void loop()
 {
-  naze.set_rc_values(rc);
+  naze.set_raw_rc(rc);
   delay(10);
   
+  ori = naze.get_orientation();
 
+  Serial.print("Yaw:  " + String(ori.yaw) + "\t");
+  Serial.print("Pitch:  " + String(ori.pitch) + "\t");
+  Serial.println("Roll:  " + String(ori.roll));
 }
