@@ -27,3 +27,33 @@ void MSP::command(uint8_t msgID, void * payload, uint8_t size)
   
   _stream->write(checksum);
 }
+
+void MSP::set_rc_values(rc_struct rc)
+{
+  data[0] = (rc.roll & 0x00FF);
+  data[1] = (rc.roll & 0xFF00) >> 8;
+
+  data[2] = (rc.pitch & 0x00FF);
+  data[3] = (rc.pitch & 0xFF00) >> 8;
+
+  data[4] = (rc.throttle & 0x00FF);
+  data[5] = (rc.throttle & 0xFF00) >> 8;
+
+  data[6] = (rc.yaw & 0x00FF);
+  data[7] = (rc.yaw & 0xFF00) >> 8;
+
+  data[8] = (rc.aux1 & 0x00FF);
+  data[9] = (rc.aux1 & 0xFF00) >> 8;
+
+  data[10] = (rc.aux2 & 0x00FF);
+  data[11] = (rc.aux2 & 0xFF00) >> 8;
+
+  data[12] = (rc.aux3 & 0x00FF);
+  data[13] = (rc.aux3 & 0xFF00) >> 8;
+
+  data[14] = (rc.aux4 & 0x00FF);
+  data[15] = (rc.aux4 & 0xFF00) >> 8;
+
+  command(set_rc_value, data, sizeof(rc));
+  
+}
