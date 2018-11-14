@@ -29,12 +29,12 @@ void setup()
 
 void loop()
 {
-  naze.set_raw_rc(rc);
-  delay(10);
+  //naze.set_raw_rc(rc);
+  delay(100);
   
   ori = naze.get_orientation();
 
-  Serial.print("Yaw:  " + String(ori.yaw) + "\t");
-  Serial.print("Pitch:  " + String(ori.pitch) + "\t");
-  Serial.println("Roll:  " + String(ori.roll));
+//  Serial.print("Yaw:  " + String(ori.yaw) + "\t");
+//  Serial.print("Pitch:  " + String(ori.pitch) + "\t");
+//  Serial.println("Roll:  " + String(ori.roll));
 }

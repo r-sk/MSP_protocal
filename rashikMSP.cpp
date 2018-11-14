@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "rashikMSP.h"
 
 void MSP::begin(Stream& stream, uint32_t timeout)
@@ -27,6 +28,67 @@ void MSP::command(uint8_t msgID, void * payload, uint8_t size)
   
   _stream->write(checksum);
 }
+
+void MSP::request(uint8_t msgID)
+{
+  _stream->write('$');
+  _stream->write('M');
+  _stream->write('<');
+  _stream->write((uint8_t)0);
+  
+  _stream->write(msgID);
+  uint8_t checksum = msgID;
+  
+  _stream->write(checksum);
+}
+
+void MSP::response(void * payload)
+{
+    uint8_t header[3];
+
+   Serial.println("Buffer size: " + String(_stream->available() ) );
+    
+    if( _stream->available() )
+    {
+       _stream->readBytes((uint8_t*)header, 3);
+
+      Serial.println("Buffer size: " + String(_stream->available() ) );
+
+       if (header[0] == '$' && header[1] == 'M' && header[2] == '>')
+       {
+          uint8_t size = _stream->read();
+          uint8_t msgID = _stream->read();
+
+          Serial.println("Buffer size: " +String( _stream->available() ) );
+          Serial.println( "SIze of Payload : " + String( size ) );
+    
+          uint8_t * payloadPtr = (uint8_t*)payload;
+
+          Serial.println("Now reading payloads" );
+          
+          _stream->readBytes(payloadPtr, size);
+
+          uint8_t checksum = _stream->read();
+
+          Serial.println("Buffer size: " +String( _stream->available() ) );
+
+          Serial.print( String(payloadPtr[0]) + "\t" );
+          Serial.print( String(payloadPtr[1]) + "\t" );
+          Serial.print( String(payloadPtr[2]) + "\t" );
+          Serial.print( String(payloadPtr[3]) + "\t" );
+          Serial.print( String(payloadPtr[4]) + "\t" );
+          Serial.println( String(payloadPtr[5]) + "\t" ); 
+          
+    
+       }
+    }
+  
+   
+
+  
+}
+
+
 
 void MSP::set_raw_rc(rc_struct rc)
 {
@@ -61,11 +123,27 @@ void MSP::set_raw_rc(rc_struct rc)
 orientation MSP::get_orientation()
 {
   orientation o;
+  uint16_t y;
+  uint16_t p;
+  uint16_t r;
 
+  request(MSP_ATTITUDE);
+  delay(100);
+  response( r_data);
+      
   o.yaw = 0;
   o.pitch = 1;
   o.roll = 2;
 
+  r = r_data[0] | (r_data[1] << 8);
+  p = r_data[2] | (r_data[3] << 8);
+  y = r_data[4] | (r_data[5] << 8);
+  
+
+  o.yaw = y/10.0;
+  o.pitch = p/10.0;
+  o.roll = r/10.0;
+  
   return o;
   
 }
