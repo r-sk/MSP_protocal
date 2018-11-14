@@ -10,7 +10,7 @@ MSP naze;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(19200);
   
   rc.roll = 1100;
   rc.pitch = 1200;
@@ -21,7 +21,7 @@ void setup()
   rc.aux3 = 1700;
   rc.aux4 = 1800;
 
-  naze_serial.begin(9600);
+  naze_serial.begin(19200);
   naze.begin(naze_serial);
   
 
@@ -29,12 +29,14 @@ void setup()
 
 void loop()
 {
-  //naze.set_raw_rc(rc);
-  delay(100);
-  
+  naze.set_raw_rc(rc);
+   delay(20);
   ori = naze.get_orientation();
+   delay(20);
 
-//  Serial.print("Yaw:  " + String(ori.yaw) + "\t");
-//  Serial.print("Pitch:  " + String(ori.pitch) + "\t");
-//  Serial.println("Roll:  " + String(ori.roll));
+  Serial.print("Yaw:  " + String(ori.yaw) + "\t");
+  Serial.print("Pitch:  " + String(ori.pitch) + "\t");
+  Serial.println("Roll:  " + String(ori.roll));
+
+ 
 }

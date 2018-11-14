@@ -46,5 +46,7 @@ class MSP
     void set_raw_rc(rc_struct rc);
 
     orientation get_orientation();
+
+    void check();
     
 };
